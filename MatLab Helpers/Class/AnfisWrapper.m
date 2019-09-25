@@ -1,6 +1,6 @@
 classdef AnfisWrapper
-    %ANFISWRAPPER Summary of this class goes here
-    %   Detailed explanation goes here
+    %ANFISWRAPPER Wrapper and useful methods for anfis() related
+    %operations.
     
     properties
         
@@ -17,13 +17,13 @@ classdef AnfisWrapper
     end
     
     methods
-        function obj = AnfisWrapper( fis, validation, epoch )
+        function obj = AnfisWrapper( initial_fis, validation, epoch )
            
-            obj.anfis_options = anfisOptions( 'InitialFIS', fis );
+            obj.anfis_options = anfisOptions( 'InitialFIS', initial_fis );
             obj.anfis_options.ValidationData = validation;
             obj.anfis_options.EpochNumber = epoch;
             
-            obj.initial_fis = fis;
+            obj.initial_fis = initial_fis;
             
         end
         
