@@ -13,7 +13,7 @@ classdef SubstractiveClusteringWrapper
     end
     
     methods
-        function obj = SubstractiveClusteringWrapper( training, validation, testing )
+        function obj = SubstractiveClusteringWrapper( training, validation, testing, getFI )
             %SUBSTRACTIVECLUSTERINGWRAPPER Construct an instance of this class
             %   Detailed explanation goes here
             
@@ -23,7 +23,11 @@ classdef SubstractiveClusteringWrapper
             obj.testing = testing;
             
             % Get feature indices ordered by importance (descending order)
-            obj.feature_indices = obj.getFeatureImportanceRL;
+            if nargin == 4 && getFI == true
+                obj.feature_indices = obj.getFeatureImportanceRL;
+            else
+                obj.feature_indices = 1 : size( obj.training, 2 ) - 1;
+            end
         end
         
         function feature_indices = getFeatureImportanceFE( obj )
@@ -49,7 +53,11 @@ classdef SubstractiveClusteringWrapper
             %SubstractiveClusteringWrapper.N_FEATURES Uses ReliefF to get
             %$nf most important features of dataset. Returns column indices
             
-            feature_indices = obj.feature_indices( 1:nf );
+            if nf > 0
+                feature_indices = obj.feature_indices( 1:nf );
+            else
+                feature_indices = obj.feature_indices;
+            end
         end
         
         function NFxNRxRAD = getFeasibleNFxNRCombinations( obj, NF, NR, checkRADSFirst )

@@ -195,7 +195,7 @@ classdef AnfisWrapper
        
         end
         
-        function [training, validation, testing, probs] = partition_cl( dataset, split )
+        function [training, validation, testing] = partition_cl( dataset, split )
             %ANFISWRAPPER.PARTITION Partitions dataset in training, 
             %validation and testing datasets based on SPLIT. Each subset
             %should contain the same frequencies of classes across its
@@ -203,26 +203,11 @@ classdef AnfisWrapper
             %method.
             %
             
-            arr = grpstats( table( dataset(:,1), dataset(:,end) ), 'Var2' );
-            dataset_freqs = arr.GroupCount ./ length( dataset );
-            
             [training, validation, testing] = AnfisWrapper.partition( ...
                 sortrows( dataset, 11 ), split );
             
             arr = grpstats( table( training(:,1), training(:,end) ), 'Var2' );
-            training_freqs = arr.GroupCount ./ length( training );
-            
-            arr = grpstats( table( validation(:,1), validation(:,end) ), 'Var2' );
-            validation_freqs = arr.GroupCount ./ length( validation );
-
-            arr = grpstats( table( testing(:,1), testing(:,end) ), 'Var2' );
-            testing_freqs = arr.GroupCount ./ length( testing );
-            
-            % Format probabilities table
-            probs = table( categorical(1:12)', dataset_freqs, ...
-                training_freqs, validation_freqs, testing_freqs, ...
-                'VariableNames', {'Class', 'Dataset' 'Training' ...
-                'Validation' 'Testing'} );
+            training_freqs = arr.GroupCount / length( tar
             
         end
         

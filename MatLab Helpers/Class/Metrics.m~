@@ -13,10 +13,7 @@ classdef Metrics
         NDEI
         
         % Classification Metrics
-        OA
-        PU
-        UA
-        K_HAT
+        
         
     end
     
@@ -28,7 +25,7 @@ classdef Metrics
             
             if nargin == 3 && classification
                 obj.classification = classification;
-                [obj.OA, obj.PU, obj.UA, obj.K_HAT] = ...
+                [OA, PU, UA, K_HAT] = ...
                     Metrics.classification_metrics( output, true_output );
             else
                 [obj.MSE, obj.RMSE, obj.NMSE, obj.R2, obj.NDEI] = ...
@@ -59,24 +56,23 @@ classdef Metrics
         
         function [OA, PU, UA, K_HAT] = classification_metrics( true_output, output )
            
-            % Normalize
-            output = abs( output );
+            % Normalize 
             classes_range = [min(true_output), max(true_output)];
             output( output < classes_range( 1 ) ) = classes_range( 1 );
             output( output > classes_range( 2 ) ) = classes_range( 2 );
             
             % Get confusion matrix
-            C = confusionmat( true_output, output )
-            N = length( output );
+            C = confusionmat( true_output(:, end), output );
+            N = length( diag( C ) );
                       
             %   - OVERALL ACCURACY
             OA = sum( diag( C ) ) / N;
             %   - PRODUCER ACCURACY            
             PU = diag( C ) ./ sum( C, 2 );
             %   - USER ACCURACY
-            UA = diag( C ) ./ sum( C, 1 )';
+            UA = diag( C ) ./ sum( C, 1 );
             %   - K_HAT
-            K_HAT = 0;
+            K_HAT= 0;
             
         end
         
