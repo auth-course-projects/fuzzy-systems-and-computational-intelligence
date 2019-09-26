@@ -25,6 +25,9 @@ classdef Metrics
         function obj = Metrics( output, true_output, classification )
             
             obj.N = length( output );
+            if obj.N == 0
+                return
+            end
             
             if nargin == 3 && classification
                 obj.classification = classification;

@@ -106,13 +106,13 @@ classdef SubstractiveClusteringWrapper
             genOpt = genfisOptions( 'SubtractiveClustering' );
             genOpt.DataScale = 'auto';
             
-            if nargin == 4 && ~isnan( checkRADFirst )
+            if nargin == 4 && ~isnan( checkRADFirst ) && 0 < checkRADFirst
                 
                 genOpt.ClusterInfluenceRange = checkRADFirst;                
                 fis = genfis( obj.training( :, obj.nf2indices(nf)), ...
                     obj.training( :, end), genOpt );
                 
-                nr_hat = length( fis.rule );
+                nr_hat = length( fis.rule )
                 if nr_hat == nr
                    
                     rad = checkRADFirst;
@@ -122,9 +122,14 @@ classdef SubstractiveClusteringWrapper
                     
             end
             
+            rad_reached_1 = false;
             while( 1 )
                 
                 rad = rad + rad_step;
+                if rad > 1
+                    rad = 1;
+                    rad_reached_1 = true;
+                end
                 
                 genOpt.ClusterInfluenceRange = rad;                
                 fis = genfis( obj.training( :, obj.nf2indices(nf)), ...
@@ -132,7 +137,7 @@ classdef SubstractiveClusteringWrapper
                 
                 nr_hat = length( fis.rule );
                 max_iter = max_iter - 1;
-                if ( nr_hat == nr || 0 == max_iter )
+                if nr_hat == nr || 0 == max_iter || rad_reached_1
                     
                     break
                     
