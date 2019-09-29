@@ -18,16 +18,16 @@ clear dataset CCPP
 
 %% Training
 metrics = Metrics.empty( n_models, 0 );
-for i = 1 : n_models
+for i = n_models
     
     initial_fis = AnfisWrapper.initial_fis_gp( tsk_param_nmfs(i), ...
         mf_types(i), tsk_param_types(i), training );
     
-    model = AnfisWrapper( initial_fis, validation, 100 );
+    model = AnfisWrapper( initial_fis, validation, 80 );
     model = model.train( training );
     
     %% Test trained model and get metrics
-    [testing_output, metrics(i)] = model.test( testing );
+    [testing_output, metrics] = model.test( testing );
     
     %% Learning Curves
     %   - trained mfs for each input
