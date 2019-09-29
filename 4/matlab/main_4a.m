@@ -20,7 +20,7 @@ end
 % dataset = [normalize( dataset( :, 1:end-1 ) ) dataset( :, end )];
 
 %% Split Dataset ( 60-20-20 split )
-[training, validation, testing, probs] = ...
+[training, validation, testing, ~] = ...
     AnfisWrapper.partition_cl( dataset, split );
 clear avila
 
@@ -52,12 +52,6 @@ end
 %% Train models
 metrics = Metrics.empty( length( RAD ), 0 ); 
 for rad_i = 1 : length( RAD )
-   
-    if rad_i == 1 || rad_i == 2
-        metrics(1) = Metrics([], []);
-        metrics(2) = Metrics([], []);
-        continue
-    end
     
     initial_fis = AnfisWrapper.initial_fis_sc( RAD( rad_i ), training( :, [scw.nf2indices(nf) end] ) );    
     model = AnfisWrapper( initial_fis, validation( :, [scw.nf2indices(nf) end] ), 100, true );

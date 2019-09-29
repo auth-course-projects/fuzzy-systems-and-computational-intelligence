@@ -63,23 +63,28 @@ classdef Metrics
         function [OA, PU, UA, K_HAT] = classification_metrics( true_output, output )
            
             % Normalize
-            output = abs( output );
             classes_range = [min(true_output), max(true_output)];
             output( output < classes_range( 1 ) ) = classes_range( 1 );
             output( output > classes_range( 2 ) ) = classes_range( 2 );
             
             % Get confusion matrix
-            C = confusionmat( true_output, output )
+            C = confusionmat( true_output, output );
             N = length( output );
+            
+            x_ir = sum( C )';
+            x_jc = sum( C, 2 );
+            diag_C = diag( C );
                       
             %   - OVERALL ACCURACY
-            OA = sum( diag( C ) ) / N;
+            OA = sum( diag_C ) / N;
             %   - PRODUCER ACCURACY            
-            PU = diag( C ) ./ sum( C, 2 );
+            PU = diag_C ./ x_jc;
             %   - USER ACCURACY
-            UA = diag( C ) ./ sum( C, 1 )';
+            UA = diag_C ./ x_ir;
             %   - K_HAT
-            K_HAT = 0;
+            p_o = OA;
+            p_e = ( 1/N^2 ) * sum( x_ir .* x_jc );
+            K_HAT = (p_o - p_e) / (1 - p_e);
             
         end
         

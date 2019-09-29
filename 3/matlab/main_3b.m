@@ -76,6 +76,12 @@ clear scw_cv_i cv_training cv_validation
 validation_errors = mean( validation_errors_cv );
 [~, opt_grid_point_index] = min( validation_errors );
 
+% Get optimum parameters
+nf_opt = NFxNRxRAD( opt_grid_point_index, 1, 1 );
+nr_opt = NFxNRxRAD( opt_grid_point_index, 2, 1 );
+rads_opt( : ) = NFxNRxRAD( opt_grid_point_index, 3, : );
+rad_opt = trimmean( rads_opt( rads_opt > 0 ), 50  );
+
 % 3D Stem
 NFxNR = cartprod( NF, NR );
 validation_errors_ij = zeros( length( NF ), length( NR ) );
@@ -88,12 +94,6 @@ stem3( NR, NF, validation_errors_ij,':*r' )
 hold on
 stem3( nr_opt, nf_opt, validation_errors_ij( find( NF == nf_opt ), find( NR == nr_opt ) ), ':*g' )
 hold off
-
-% Get optimum parameters
-nf_opt = NFxNRxRAD( opt_grid_point_index, 1, 1 );
-nr_opt = NFxNRxRAD( opt_grid_point_index, 2, 1 );
-rads_opt( : ) = NFxNRxRAD( opt_grid_point_index, 3, : );
-rad_opt = trimmean( rads_opt( rads_opt > 0 ), 50  );
  
 % Keep only the "best" features of training/validation/testing set
 scw = SubstractiveClusteringWrapper( training, validation, testing );

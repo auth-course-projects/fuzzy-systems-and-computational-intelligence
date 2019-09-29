@@ -23,7 +23,7 @@ for i = 1 : n_models
     initial_fis = AnfisWrapper.initial_fis_gp( tsk_param_nmfs(i), ...
         mf_types(i), tsk_param_types(i), training );
     
-    model = AnfisWrapper( initial_fis, validation, 10 );
+    model = AnfisWrapper( initial_fis, validation, 100 );
     model = model.train( training );
     
     %% Test trained model and get metrics
@@ -32,19 +32,21 @@ for i = 1 : n_models
     %% Learning Curves
     %   - trained mfs for each input
     figure
+    model.plot_initial_mfs();
+    suptitle( ['MODEL ' num2str( i ) ' | Initial Input MFs'] )
+    figure
     model.plot_trained_mfs();
+    suptitle( ['MODEL ' num2str( i ) ' | Trained Input MFs'] )
     
     %   - learning curves ( training/validation error )
     figure
-    model.plot_learning_curves();
+    model.plot_learning_curves( i );
 
     %   - prediction error
     figure
     plot( testing_output - testing( :, end ) );
-    title( 'Prediction Errors' ) 
+    title( ['MODEL ' num2str(i) ' | Prediction Errors'] )
     xlabel( 'sample index' )
     ylabel( 'error' )
-    
-    break
     
 end

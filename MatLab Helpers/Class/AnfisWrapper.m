@@ -116,11 +116,16 @@ classdef AnfisWrapper
             
         end
         
-        function plot_learning_curves( obj )
+        function plot_learning_curves( obj, modelIndex )
             
             i = 1 : length( obj.train_error );
             plot( i, obj.train_error, i, obj.validation_error );
-            title( 'Learning Curves' )  
+            
+            if nargin > 1 && modelIndex > 0
+                title( ['MODEL ' num2str(modelIndex) ' | Learning Curves'] )
+            else
+                title( 'Learning Curves' )  
+            end
             xlabel( '# of Iterations' )
             ylabel( 'MSE' )
             legend( 'Training','Validation' )
@@ -195,6 +200,20 @@ classdef AnfisWrapper
        
         end
         
+        
+        function fis = initial_fis_fcm( nr, training )
+            %ANFISWRAPPER.INITIAL_FIS_FCM Get initial FIS for anfis() using 
+            %Fuzzy C-means as input space splitting method.
+            %
+            
+            genOpt = genfisOptions( 'FCMClustering' );
+            genOpt.FISType = 'sugeno';
+            genOpt.NumClusters = nr;
+
+            fis = genfis( training(:,1:end-1), training(:,end), genOpt );
+       
+        end
+        
         function [training, validation, testing, probs] = partition_cl( dataset, split )
             %ANFISWRAPPER.PARTITION Partitions dataset in training, 
             %validation and testing datasets based on SPLIT. Each subset
@@ -203,11 +222,13 @@ classdef AnfisWrapper
             %method.
             %
             
+            ncols = size( dataset, 2 );
+            
             arr = grpstats( table( dataset(:,1), dataset(:,end) ), 'Var2' );
             dataset_freqs = arr.GroupCount ./ length( dataset );
             
             [training, validation, testing] = AnfisWrapper.partition( ...
-                sortrows( dataset, 11 ), split );
+                sortrows( dataset, ncols ), split );
             
             arr = grpstats( table( training(:,1), training(:,end) ), 'Var2' );
             training_freqs = arr.GroupCount ./ length( training );
@@ -219,10 +240,12 @@ classdef AnfisWrapper
             testing_freqs = arr.GroupCount ./ length( testing );
             
             % Format probabilities table
-            probs = table( categorical(1:12)', dataset_freqs, ...
+            probs = table( categorical( ...
+                1:length(dataset_freqs))', dataset_freqs, ...
                 training_freqs, validation_freqs, testing_freqs, ...
                 'VariableNames', {'Class', 'Dataset' 'Training' ...
-                'Validation' 'Testing'} );
+                'Validation' 'Testing'} ...
+            );
             
         end
         
