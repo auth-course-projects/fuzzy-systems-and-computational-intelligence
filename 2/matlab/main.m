@@ -8,7 +8,7 @@ speed = 0.05;   % m / sec
 
 % Initial Pose
 pos_initial = [3.8; 0.5];
-theta_initial = -45;
+theta_initial = -130;
 
 %% Control Loop
 route = zeros( 200, 2 );
@@ -20,6 +20,12 @@ theta = theta_initial;
 disp( "Initial Target: (x, y) = (" + num2str( target(1) ) + ", " + ...
             num2str( target(2) ) + ")" );
 
+% FIX: Track step when one coordinate becomes the same as target point's
+% To track step, will retain previous point with the same property
+ref_point = NaN;
+conv_step_n = 0;
+n = 1;
+        
 while( 1 )
    
     % Get Sensor Measurements
@@ -35,6 +41,35 @@ while( 1 )
     % Calc next position
     pos = pos + speed * [cosd(theta); sind(theta)];
     route( route_i, : ) = pos';
+    
+    % FIX: Check if any of the coords became equal
+    % For given problem, check if y coord has been approx. to millimeter
+    if ( abs( pos( 2 ) - target( 2 ) ) < 1e-3 )
+        
+        
+        if ( isnan( ref_point ) )
+            ref_point = pos( 1 );
+        else
+            % Get convergence step
+            current_step = abs( pos(1) - ref_point );
+            conv_step_n = conv_step_n + ( current_step - conv_step_n ) / n;
+            
+            % Predict on given step
+            % If going the next step will increase the error from target
+            % then, stop on this step
+            if ( abs( target(1) - ( pos(1) + conv_step_n ) ) > ...
+                    abs( target(1) - pos(1) ) )
+                disp( "Final Position: (x, y) = (" + num2str( pos(1) ) + ", " + ...
+                    num2str( pos(2) ) + ")" );
+                break;
+            end
+            
+            % Increment for next step
+            ref_point = pos(1);
+            n = n + 1;
+        end
+        
+    end
     
     % If pos_y > target_y: STOP
     if ( pos( 1 ) >= target( 1 ) )
