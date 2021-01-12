@@ -33,7 +33,7 @@ while( 1 )
     dv = sensor_v( pos );
     
     % Run FLC
-    delta_theta = flc( dh, dv, theta, 'modified' );
+    delta_theta = flc( dh, dv, theta, 'initial' );
     
     % Apply
     theta = theta + delta_theta;

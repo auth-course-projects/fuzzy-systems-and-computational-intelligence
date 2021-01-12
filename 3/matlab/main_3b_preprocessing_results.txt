@@ -1,0 +1,96 @@
+No smoothing, No normalizing, No rmoutlier
+------------------------------------------- --> (4)
+                 N: 4252
+    classification: 0
+               MSE: 388.2450
+              RMSE: 19.7039
+              NMSE: 0.3413
+                R2: 0.6587
+              NDEI: 0.5842
+                OA: []
+                PU: []
+                UA: []
+             K_HAT: []
+Learning Curves: Κατεβαίνουν
+
+
+Yes smoothing, No normalizing, No rmoutlier
+------------------------------------------- --> (5)
+                 N: 4252
+    classification: 0
+               MSE: 352.9548
+              RMSE: 18.7871
+              NMSE: 0.4061
+                R2: 0.5939
+              NDEI: 0.6373
+                OA: []
+                PU: []
+                UA: []
+             K_HAT: []
+Learning Curves: Κατεβαίνουν
+
+No smoothing, Yes normalizing ('range'), No rmoutlier
+------------------------------------------- --> (2)
+                 N: 4252
+    classification: 0
+               MSE: 230.5405
+              RMSE: 15.1836
+              NMSE: 0.2247
+                R2: 0.7753
+              NDEI: 0.4740
+                OA: []
+                PU: []
+                UA: []
+             K_HAT: []
+Learning Curves: Κατεβαίνουν ΤΕΛΕΙΑ
+
+
+No smoothing, No normalizing, Yes rmoutlier ( 'quartiles', 'ThresholdFactor', 10 )
+------------------------------------------- --> (1)
+                 N: 4195
+    classification: 0
+               MSE: 221.9875
+              RMSE: 14.8992
+              NMSE: 0.2181
+                R2: 0.7819
+              NDEI: 0.4670
+                OA: []
+                PU: []
+                UA: []
+             K_HAT: []
+Learning Curves: Ανεβαίνουν
+
+
+Yes smoothing, No normalizing, Yes rmoutlier ( 'quartiles', 'ThresholdFactor', 10 )
+-------------------------------------------- --> (3)
+                 N: 4195
+    classification: 0
+               MSE: 282.7361
+              RMSE: 16.8148
+              NMSE: 0.2938
+                R2: 0.7062
+              NDEI: 0.5420
+                OA: []
+                PU: []
+                UA: []
+             K_HAT: []
+Learning Curves: Κατεβαίνουν Ελάχιστα
+
+
+No smoothing, Yes normalizing ('range', before rmoutlier), Yes rmoutlier( 'ThresholdFactor', 95 )
+-------------------------------------------- --> (2)
+                 N: 4130
+    classification: 0
+               MSE: 245.7139
+              RMSE: 15.6753
+              NMSE: 0.2441
+                R2: 0.7559
+              NDEI: 0.4941
+                OA: []
+                PU: []
+                UA: []
+             K_HAT: []
+Learning Curves: Κατεβαίνουν
+
+
+
